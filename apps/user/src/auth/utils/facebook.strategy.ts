@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile } from 'passport-facebook';
 import { Strategy } from 'passport-google-oauth20';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
-  constructor() {
+  constructor(
+    @Inject('AUTH_SERVICE') private readonly authService: AuthService,
+  ) {
     super({
       clientID: process.env.APP_ID,
       clientSecret: process.env.APP_SECRET,
@@ -23,11 +26,11 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   ): Promise<any> {
     console.log('first');
     const { name, emails } = profile;
-    const user = {
-      email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-    };
+    const user = await this.authService.validateUser(
+      profile.emails[0].value,
+      profile.displayName,
+    );
+    done(null, user);
     const payload = {
       user,
       accessToken,
