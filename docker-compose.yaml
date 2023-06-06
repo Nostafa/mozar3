@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  user:
+    build:
+      context: .
+      dockerfile: ./apps/user/Dockerfile
+      target: development
+    command: npm run start:dev user
+    env_file:
+      - ./apps/user/.env
+    depends_on:
+      - database
+      - auth
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3001:3001
+
+  # auth:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/auth/Dockerfile
+  #     target: development
+  #   env_file:
+  #     - ./apps/auth/.env
+  #   depends_on:
+  #     - database
+
+  database:
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=mozaraa-api
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword
+    env_file:
+      - ./apps/user/.env
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodbData:/data/db
+      - mongoconfig:/data/configdb
+
+volumes:
+  mongodbData:
+  mongoconfig:
