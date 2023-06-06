@@ -4,8 +4,6 @@
 
 To view all api and check it you can go to [Docs](https://localhost:3001/doc/) but before you do that please install all the dependencies by following the instructions
 
-## Description
-
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
 ## Installation
