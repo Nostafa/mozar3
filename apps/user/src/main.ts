@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as session from 'express-session';
 import * as passport from 'passport';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(UserModule);
@@ -13,7 +14,12 @@ async function bootstrap() {
     }),
   );
   const configService = app.get(ConfigService);
-
+  const config = new DocumentBuilder()
+    .setTitle('Auth API for Task')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('doc', app, document);
   app.setGlobalPrefix('api');
   app.use(
     session({
