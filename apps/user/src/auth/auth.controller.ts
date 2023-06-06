@@ -13,6 +13,7 @@ import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -61,5 +62,12 @@ export class AuthController {
   @Get('/login')
   login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     return this.authService.login(loginDto);
+  }
+
+  @Get('/reset')
+  resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ token: string }> {
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

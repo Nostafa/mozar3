@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { SignUpDto } from './dto/signup.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -52,6 +53,31 @@ export class AuthService {
     return { token };
   }
 
+  async resetPassword(
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ token: string }> {
+    const { email, password, newPassword } = resetPasswordDto;
+
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+
+    const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatched) {
+      throw new UnauthorizedException('Invalid email or password');
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.userModel.findOneAndUpdate(
+      { _id: user._id },
+      { password: hashedPassword },
+    );
+    const token = this.jwtService.sign({ id: user._id });
+
+    return { token };
+  }
   async findUser(id: number) {
     const user = await this.userModel.findById({ id });
     return user;
