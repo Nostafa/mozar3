@@ -22,18 +22,18 @@ export class AuthController {
 
   // ************************OAuthGoogle****************************
 
-  // @Get('google/login')
-  // @UseGuards(GoogleAuthGuard)
-  // handleLogin() {
-  //   return { msg: 'Google Authentication' };
-  // }
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  handleLogin() {
+    return { msg: 'Google Authentication' };
+  }
 
-  // // api/auth/google/redirect
-  // @Get('google/redirect')
-  // @UseGuards(GoogleAuthGuard)
-  // handleRedirect() {
-  //   return { msg: 'OK Google' };
-  // }
+  // api/auth/google/redirect
+  @Get('google/redirect')
+  @UseGuards(GoogleAuthGuard)
+  handleRedirect() {
+    return { msg: 'OK Google' };
+  }
   // ************************OAuthFacebook****************************
   // http://localhost:3001/api/auth/facebook/login
   @Get('/facebook/login')
